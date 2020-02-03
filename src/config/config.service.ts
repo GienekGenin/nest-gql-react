@@ -29,7 +29,7 @@ class ConfigService {
     return {
       type: 'postgres',
 
-      host: 'localhost' || this.getValue('DB_HOST'),
+      host: this.getValue('DB_HOST'),
       port: parseInt(this.getValue('DB_PORT'), 0),
       username: this.getValue('DB_USERNAME'),
       password: this.getValue('DB_PASSWORD'),
