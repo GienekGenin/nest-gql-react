@@ -1,23 +1,22 @@
-import {
-  EventSubscriber,
-  EntitySubscriberInterface,
-  InsertEvent,
-} from 'typeorm';
-import { User } from 'src/entities/user/user.entity';
+import { getRepository } from 'typeorm';
+import { User } from '../../entities/user/user.entity';
 
-@EventSubscriber()
-export class PostSubscriber implements EntitySubscriberInterface<User> {
-  /**
-   * Indicates that this subscriber only listen to Post events.
-   */
-  listenTo() {
-    return User;
+export const seedUsers = async () => {
+  try {
+    const users: User[] = [
+      { userName: 'Gena', email: 'gendos@gmail.com', password: '1' },
+      { userName: 'Vanya', email: 'vanya@gmail.com', password: '2' },
+    ].map((el: User) => {
+      const user = new User();
+      user.userName = el.userName;
+      user.email = el.email;
+      user.password = el.password;
+      return user;
+    });
+    const usersRepo = getRepository(User);
+    await usersRepo.insert(users).then(d => console.log('Users inserted'));
+  } catch (e) {
+    // tslint:disable-next-line:no-console
+    console.error(e);
   }
-
-  /**
-   * Called before post insertion.
-   */
-  beforeInsert(event: InsertEvent<User>) {
-    console.log(`BEFORE POST INSERTED: `, event.entity);
-  }
-}
+};

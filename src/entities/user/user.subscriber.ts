@@ -4,6 +4,7 @@ import {
   InsertEvent,
 } from 'typeorm';
 import { User } from './user.entity';
+import * as bcrypt from 'bcryptjs';
 
 @EventSubscriber()
 export class UserSubscriber implements EntitySubscriberInterface<User> {
@@ -17,8 +18,9 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
   /**
    * Called before post insertion.
    */
-  beforeInsert(event: InsertEvent<User>) {
+  async beforeInsert(event: InsertEvent<User>) {
     // tslint:disable-next-line:no-console
     console.log(`BEFORE POST INSERTED: `, event.entity);
+    event.entity.password = await bcrypt.hash(event.entity.password, 12);
   }
 }
