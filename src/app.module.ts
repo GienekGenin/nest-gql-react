@@ -10,7 +10,8 @@ import { configService } from './config/config.service';
   imports: [
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
     GraphQLModule.forRoot({
-      autoSchemaFile: 'schema.gql',
+      autoSchemaFile: '../../schema.gql',
+      playground: true,
     }),
     UserModule,
   ],
