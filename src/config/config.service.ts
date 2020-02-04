@@ -7,7 +7,7 @@ class ConfigService {
   constructor(private env: { [k: string]: string | undefined }) {}
 
   private mod = process.env.NODE_ENV;
-  private getValue(key: string, throwOnMissing = true): string {
+  public getValue(key: string, throwOnMissing = true): string {
     const value = this.env[key];
     if (!value && throwOnMissing) {
       throw new Error(`config error - missing env.${key}`);
@@ -26,10 +26,16 @@ class ConfigService {
   }
 
   public getTypeOrmConfig(): TypeOrmModuleOptions {
+    const host =
+      this.mod === 'development'
+        ? this.getValue('CONTAINERIZED_DEV') === 'TRUE'
+          ? 'postgres'
+          : 'localhost'
+        : this.getValue('DB_HOST');
     return {
       type: 'postgres',
 
-      host: this.getValue('DB_HOST'),
+      host,
       port: parseInt(this.getValue('DB_PORT'), 0),
       username: this.getValue('DB_USERNAME'),
       password: this.getValue('DB_PASSWORD'),
