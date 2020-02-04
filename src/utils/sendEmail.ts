@@ -1,29 +1,27 @@
 import * as nodemailer from 'nodemailer';
+import { configService } from '../config/config.service';
 
-// async..await is not allowed in global scope, must use a wrapper
 export const sendEmail = async (email: string, link: string) => {
-  // create reusable transporter object using the default SMTP transport
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.sendgrid.net',
-    port: 465,
-    secure: true, // true for 465, false for other ports
-    auth: {
-      user: 'apikey', // generated ethereal user
-      pass:
-        process.env.SENDGRID_API_KEY ||
-        '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', // generated ethereal password
-    },
-  });
+  try {
+    // create reusable transporter object using the default SMTP transport
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: configService.getValue('EMAIL'),
+        pass: configService.getValue('EMAIL_PASS'),
+      },
+    });
 
-  // send mail with defined transport object
-  const info = await transporter.sendMail({
-    from: '"Fred Foo 👻" <foo@example.com>', // sender address
-    to: email, // list of receivers
-    subject: 'Hello ✔', // Subject line
-    text: 'Hello world?', // plain text body
-    html: `<b>Hello world?</b> <a href="${link}">confirm Email</a>`, // html body
-  });
+    const mailOptions = {
+      from: configService.getValue('EMAIL'), // sender address
+      to: email, // list of receivers
+      text: 'Hello world?', // plain text body
+      html: `<b>Hello world?</b> <a href="${link}">confirm Email</a>`, // html body
+    };
 
-  console.log('Message sent: %s', info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    // send mail with defined transport object
+    await transporter.sendMail(mailOptions);
+  } catch (e) {
+    console.error(e);
+  }
 };

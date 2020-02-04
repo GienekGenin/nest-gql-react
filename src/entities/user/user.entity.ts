@@ -13,4 +13,7 @@ export class User {
 
   @Column({ length: 255 })
   password: string;
+
+  @Column({ default: false })
+  confirmed: boolean;
 }

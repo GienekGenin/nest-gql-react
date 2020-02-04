@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SignupInput } from './input/signup-input';
 import { UserRepository } from './user.repository';
 import { ErrorResponce } from './shared/errorResponse';
+import { sendEmail } from '../../utils/sendEmail';
+import { confirmEmailLink } from '../../utils/confimEmailLink';
+import { redis } from '../../redis';
+import { Response } from 'express';
+import { CONFIRM_EMAIL_PREFIX } from '../../constants';
 
 @Injectable()
 export class UserService {
@@ -27,7 +32,8 @@ export class UserService {
         ];
       }
 
-      await this.userRepository.save({ ...signupInput });
+      const user = await this.userRepository.save({ ...signupInput });
+      await sendEmail(signupInput.email, await confirmEmailLink(user.id));
       return null;
     } catch (e) {
       return [
@@ -36,6 +42,19 @@ export class UserService {
           message: e,
         },
       ];
+    }
+  }
+
+  async confirmEmail(id: string, res: Response) {
+    try {
+      const userId = await redis.get(`${CONFIRM_EMAIL_PREFIX}_${id}`);
+      if (!userId) {
+        throw new NotFoundException();
+      }
+      await this.userRepository.update({ id: userId }, { confirmed: true });
+      res.send('ok');
+    } catch (e) {
+      throw new NotFoundException();
     }
   }
 }

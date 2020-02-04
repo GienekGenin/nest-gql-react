@@ -5,6 +5,7 @@ import { listenToKill } from './common/services/instance.kill.service';
 import { applyMiddleware } from './common/services/app.config-service';
 import { seed } from './seeds';
 import { redis } from './redis';
+import { configService } from './config/config.service';
 
 redis.set('test', 'sosi');
 redis.get('test').then((d: any) => console.log('Data from redis:', d));
@@ -15,6 +16,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await seed();
   applyMiddleware(app);
-  await app.listen(3000);
+  await app.listen(configService.getPort());
 }
 bootstrap();
