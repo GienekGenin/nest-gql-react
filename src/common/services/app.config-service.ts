@@ -1,11 +1,24 @@
+import 'reflect-metadata';
 import { INestApplication } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as bodyParser from 'body-parser';
 import * as helmet from 'helmet';
 import * as logger from 'morgan';
 import * as cors from 'cors';
+import * as session from 'express-session';
+import { configService } from '../../config/config.service';
 
 export const applyMiddleware = (app: INestApplication) => {
+  app.use(
+    session({
+      name: 'voutingapp',
+      secret: configService.getValue('SESSION_SECRET'),
+      resave: true,
+      saveUninitialized: false,
+      cookie: { httpOnly: true, secure: false },
+    }),
+  );
+
   const options = new DocumentBuilder()
     .setTitle('App API docs')
     .setDescription('API description')

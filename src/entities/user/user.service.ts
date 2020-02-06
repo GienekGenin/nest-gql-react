@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SignupInput } from './input/signup-input';
+import { SignupInput, LoginInput } from './input';
 import { UserRepository } from './user.repository';
 import { ErrorResponce } from './shared/errorResponse';
 import { sendEmail } from '../../utils/sendEmail';
 import { confirmEmailLink } from '../../utils/confimEmailLink';
 import { redis } from '../../redis';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { CONFIRM_EMAIL_PREFIX } from '../../constants';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -56,5 +57,42 @@ export class UserService {
     } catch (e) {
       throw new NotFoundException();
     }
+  }
+
+  async login(
+    loginInput: LoginInput,
+    req: Request,
+  ): Promise<ErrorResponce[] | null> {
+    const user = await this.userRepository.findOne({ email: loginInput.email });
+    if (!user) {
+      return [
+        {
+          path: 'error',
+          message: 'User does not exist',
+        },
+      ];
+    } else if (!user.confirmed) {
+      return [
+        {
+          path: 'error',
+          message: 'Confirm email',
+        },
+      ];
+    }
+
+    const checkPassword = await bcrypt.compare(
+      loginInput.password,
+      user.password,
+    );
+    if (!checkPassword) {
+      return [
+        {
+          path: 'error',
+          message: 'wrong pass',
+        },
+      ];
+    }
+    req.session.userId = user.id;
+    return null;
   }
 }

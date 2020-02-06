@@ -1,6 +1,6 @@
 {
   "type": "postgres",
-  "host": "postgres",
+  "host": "localhost",
   "port": 5432,
   "username": "postgres",
   "password": "example",
@@ -8,8 +8,8 @@
   "entities": [
     "dist/entities/**/*.entity{.ts,.js}"
   ],
-  "dropSchema": false,
-  "synchronize": false,
+  "dropSchema": true,
+  "synchronize": true,
   "migrationsTableName": "migration",
   "migrations": [
     "dist/migration/*.js"
