@@ -9,6 +9,7 @@ import { redis } from '../../redis';
 import { Response, Request } from 'express';
 import { CONFIRM_EMAIL_PREFIX } from '../../constants';
 import * as bcrypt from 'bcryptjs';
+import { MyContext } from './uesr.types';
 
 @Injectable()
 export class UserService {
@@ -94,5 +95,13 @@ export class UserService {
     }
     req.session.userId = user.id;
     return null;
+  }
+
+  async logout(ctx: MyContext) {
+    await ctx.req.session.destroy((err: any) => {
+      console.error(err);
+      return false;
+    });
+    await ctx.res.clearCookie('voutingapp');
   }
 }

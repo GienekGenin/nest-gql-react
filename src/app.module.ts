@@ -12,7 +12,7 @@ import { configService } from './config/config.service';
     GraphQLModule.forRoot({
       autoSchemaFile: '../../schema.gql',
       playground: configService.getValue('NODE_ENV') === 'development',
-      context: ({ req }) => ({ req }),
+      context: ({ req, res }) => ({ req, res }),
     }),
     UserModule,
   ],
