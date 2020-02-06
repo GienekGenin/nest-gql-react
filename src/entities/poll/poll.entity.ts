@@ -1,10 +1,9 @@
 import {
-  Entity,
   Column,
-  PrimaryGeneratedColumn,
+  Entity,
   ManyToOne,
-  JoinColumn,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { PollOption } from '../poll-option/poll-option.entity';
@@ -12,17 +11,19 @@ import { PollOption } from '../poll-option/poll-option.entity';
 @Entity({ schema: 'public', name: 'poll' })
 export class Poll {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
-  @Column({ length: 255, unique: true })
+  @Column('text')
   name: string;
+
+  @Column()
+  userId: string;
 
   @ManyToOne(
     () => User,
-    user => user.pool,
+    user => user.poll,
   )
-  @JoinColumn()
-  user: Promise<User>;
+  user: Promise<User>; // generated a userId
 
   @OneToMany(
     () => PollOption,

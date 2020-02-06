@@ -4,23 +4,23 @@ import { Poll } from '../poll/poll.entity';
 @Entity({ schema: 'public', name: 'user' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  id: string;
 
-  @Column({ length: 255, unique: true })
+  @Column()
   userName: string;
 
-  @Column({ length: 255, unique: true })
+  @Column()
   email: string;
 
-  @Column({ length: 255 })
+  @Column()
   password: string;
-
-  @Column({ default: false })
+  // todo default should be false
+  @Column({ default: true })
   confirmed: boolean;
 
   @OneToMany(
     () => Poll,
     poll => poll.user,
   )
-  pool: Promise<Poll[]>;
+  poll: Promise<Poll[]>;
 }

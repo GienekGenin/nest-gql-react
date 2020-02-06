@@ -10,18 +10,20 @@ import { Poll } from '../poll/poll.entity';
 @Entity({ schema: 'public', name: 'poll-option' })
 export class PollOption {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id: number;
 
-  @Column({ length: 255 })
+  @Column('text')
   text: string;
 
+  @Column('integer')
+  votes: number;
+
   @Column()
-  voutes: number;
+  pollId: number;
 
   @ManyToOne(
     () => Poll,
     poll => poll.pollOption,
   )
-  @JoinColumn()
-  poll: Promise<Poll>;
+  poll: Promise<Poll>; // generated a  pollId
 }
