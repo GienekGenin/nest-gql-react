@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Poll } from '../poll/poll.entity';
 
 @Entity({ schema: 'public', name: 'user' })
 export class User {
@@ -16,4 +17,10 @@ export class User {
 
   @Column({ default: false })
   confirmed: boolean;
+
+  @OneToMany(
+    () => Poll,
+    poll => poll.user,
+  )
+  pool: Promise<Poll[]>;
 }

@@ -5,6 +5,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { UserModule } from './entities/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configService } from './config/config.service';
+import { PoolModule } from './entities/poll/poll.module';
+import { PoolOptionsModule } from './entities/poll-option/poll-option.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { configService } from './config/config.service';
       context: ({ req, res }) => ({ req, res }),
     }),
     UserModule,
+    PoolModule,
+    PoolOptionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
