@@ -7,15 +7,26 @@ import * as logger from 'morgan';
 import * as cors from 'cors';
 import * as session from 'express-session';
 import { configService } from '../../config/config.service';
+import * as Store from 'connect-redis';
+import { redis } from '../../redis';
 
 export const applyMiddleware = (app: INestApplication) => {
+  const RedisStore = Store(session);
+
   app.use(
     session({
       name: 'voutingapp',
       secret: configService.getValue('SESSION_SECRET'),
       resave: true,
       saveUninitialized: false,
-      cookie: { httpOnly: true, secure: false },
+      store: new RedisStore({
+        client: redis,
+      }),
+      cookie: {
+        httpOnly: true,
+        secure: configService.getValue('NODE_ENV') === 'production',
+        maxAge: 1000 * 60 * 60,
+      },
     }),
   );
 
