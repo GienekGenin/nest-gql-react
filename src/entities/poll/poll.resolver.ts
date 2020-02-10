@@ -1,14 +1,23 @@
-import { Resolver, Mutation, Args, Context, Query } from '@nestjs/graphql';
+import {
+  Resolver,
+  Mutation,
+  Args,
+  Context,
+  Query,
+  ResolveProperty,
+  Root,
+} from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { GetUserId } from 'src/common/decorators/getUserId.decorator';
 import { CreatePollArgs } from '../../common/args/createPoll.args';
 import { PollService } from './poll.service';
-import { MyContext } from '../user/uesr.types';
+import { MyContext } from '../../common/types/MyContext.types';
 import { Poll } from './poll.entity';
 import { AllPollsArgs } from 'src/common/args/allpolls.args';
+import { PollOption } from '../poll-option/poll-option.entity';
 
-@Resolver('Poll')
+@Resolver(() => Poll)
 export class PollResolver {
   constructor(private readonly pollService: PollService) {}
 
@@ -53,5 +62,13 @@ export class PollResolver {
   @UseGuards(AuthGuard)
   async myPoll(@GetUserId() userId: string): Promise<Poll[]> {
     return this.pollService.myPoll(userId);
+  }
+
+  @ResolveProperty('pollOption')
+  async pollOption(
+    @Root() poll: Poll,
+    @Context() ctx: MyContext,
+  ): Promise<PollOption[]> {
+    return await ctx.pollOptionLoader.load(poll.id);
   }
 }

@@ -54,6 +54,7 @@ class ConfigService {
         migrationsDir: 'src/migration',
       },
       subscribers: ['dist/entities/**/*.subscriber{.ts,.js}'],
+      logging: true,
     };
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PollRepository } from './poll.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PollOptionRepository } from '../poll-option/poll-option.repository';
-import { MyContext } from '../user/uesr.types';
+import { MyContext } from '../../common/types/MyContext.types';
 import { redis } from 'src/redis';
 import { POLL_OPTION_ID_PREFIX } from 'src/constants';
 import { Poll } from './poll.entity';

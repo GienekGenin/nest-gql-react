@@ -19,5 +19,6 @@
   },
   "subscribers": [
     "dist/entities/**/*.subscriber{.ts,.js}"
-  ]
+  ],
+  "logging": true
 }

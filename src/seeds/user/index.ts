@@ -25,7 +25,7 @@ export const seedUsers = async () => {
       return user;
     });
     const usersRepo = getRepository(User);
-    await usersRepo.insert(users).then(d => console.log('Users inserted'));
+    await usersRepo.insert(users);
   } catch (e) {
     // tslint:disable-next-line:no-console
     console.error(e);

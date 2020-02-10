@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, Context } from '@nestjs/graphql';
 import { SignupInput, LoginInput } from './input';
 import { UserService } from './user.service';
 import { ErrorResponce } from './shared/errorResponse';
-import { MyContext } from './uesr.types';
+import { MyContext } from '../../common/types/MyContext.types';
 
 @Resolver('User')
 export class UserResolver {

@@ -9,7 +9,7 @@ import { redis } from '../../redis';
 import { Response, Request } from 'express';
 import { CONFIRM_EMAIL_PREFIX } from '../../constants';
 import * as bcrypt from 'bcryptjs';
-import { MyContext } from './uesr.types';
+import { MyContext } from '../../common/types/MyContext.types';
 
 @Injectable()
 export class UserService {
