@@ -30,6 +30,7 @@ export class PollOption {
   @ManyToOne(
     () => Poll,
     poll => poll.pollOption,
+    { onDelete: 'CASCADE' },
   )
   poll: Promise<Poll>; // generated a  pollId
 }

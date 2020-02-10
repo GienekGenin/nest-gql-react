@@ -39,4 +39,19 @@ export class PollResolver {
   async allPoll(@Args() { take, skip }: AllPollsArgs): Promise<Poll[]> {
     return await this.pollService.allPolls(take, skip);
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(AuthGuard)
+  async deletePoll(
+    @Context() ctx: MyContext,
+    @Args('id') id: number,
+  ): Promise<boolean> {
+    return this.pollService.delete(ctx, id);
+  }
+
+  @Query(() => [Poll])
+  @UseGuards(AuthGuard)
+  async myPoll(@GetUserId() userId: string): Promise<Poll[]> {
+    return this.pollService.myPoll(userId);
+  }
 }

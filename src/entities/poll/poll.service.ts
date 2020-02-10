@@ -83,4 +83,22 @@ export class PollService {
       .skip(skip)
       .getMany();
   }
+
+  async delete(ctx: MyContext, id: number) {
+    try {
+      const ip =
+        ctx.req.header('x-forwarded-for') || ctx.req.connection.remoteAddress;
+      await redis.srem(`${POLL_OPTION_ID_PREFIX}${id}`, ip);
+
+      await this.pollRepo.delete({ id });
+      return Promise.resolve(true);
+    } catch (e) {
+      console.error(e);
+      return Promise.resolve(false);
+    }
+  }
+
+  async myPoll(userId: string): Promise<Poll[]> {
+    return this.pollRepo.find({ userId });
+  }
 }
