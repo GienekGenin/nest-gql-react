@@ -73,4 +73,14 @@ export class PollService {
   async poll(id: number): Promise<Poll> {
     return this.pollRepo.findOne({ where: { id }, relations: ['pollOption'] });
   }
+
+  async allPolls(take: number, skip: number): Promise<Poll[]> {
+    return this.pollRepo
+      .createQueryBuilder('poll')
+      .innerJoinAndSelect('poll.pollOption', 'pollOption')
+      .orderBy('poll.name', 'ASC')
+      .take(take)
+      .skip(skip)
+      .getMany();
+  }
 }

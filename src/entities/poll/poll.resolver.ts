@@ -6,6 +6,7 @@ import { CreatePollArgs } from '../../common/args/createPoll.args';
 import { PollService } from './poll.service';
 import { MyContext } from '../user/uesr.types';
 import { Poll } from './poll.entity';
+import { AllPollsArgs } from 'src/common/args/allpolls.args';
 
 @Resolver('Poll')
 export class PollResolver {
@@ -32,5 +33,10 @@ export class PollResolver {
   @Query(() => Poll)
   async poll(@Args('id') id: number): Promise<Poll> {
     return await this.pollService.poll(id);
+  }
+
+  @Query(() => [Poll])
+  async allPoll(@Args() { take, skip }: AllPollsArgs): Promise<Poll[]> {
+    return await this.pollService.allPolls(take, skip);
   }
 }
